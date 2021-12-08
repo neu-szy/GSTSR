@@ -1,0 +1,63 @@
+name: test_GSTSR_x4_ct
+suffix: ~  # add suffix to saved images
+model_type: SRModel
+scale: 4
+crop_border: ~  # crop border when evaluation. If None, crop the scale pixels
+cpu: False
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+seed: 1
+
+datasets:
+#  test_1:
+#    name: belly
+#    type: PairedImageDataset
+#    dataroot_gt: /home/zhiyi/data/medical/belly/hr_valid
+#    dataroot_lq: /home/zhiyi/data/medical/belly/x4_valid
+#    io_backend:
+#      type: disk
+  test_2:
+    name: lung
+    type: PairedImageDataset
+    dataroot_gt: /home/zhiyi/data/medical/lung/hr_valid
+    dataroot_lq: /home/zhiyi/data/medical/lung/x4_valid
+    io_backend:
+      type: disk
+
+# network structures
+network_g:
+  type: GSTSR
+  upscale: 4
+  in_chans: 3
+  img_size: 48
+  window_size: 8
+  img_range: 1.
+  depths: [6, 6, 6, 6, 6, 6]
+  embed_dim: 180
+  num_heads: [6, 6, 6, 6, 6, 6]
+  mlp_ratio: 2
+  upsampler: 'pixelshuffle'
+  resi_connection: '1conv'
+  scam: True
+  gffm: True
+save_img: false
+
+# path
+path:
+  pretrain_network_g: /home/zhiyi/pycharm-tmp/basicsr/experiments/train_GSTSR_belly_x4/models/net_g_100000.pth
+  strict_load_g: true
+  param_key_g: params
+
+# validation settings
+val:
+  save_img: true
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 4
+      test_y_channel: true
+    ssim:
+      type: calculate_ssim
+      crop_border: 4
+      test_y_channel: true

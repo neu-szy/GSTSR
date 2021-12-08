@@ -1,0 +1,68 @@
+name: test_esrgan_x2_ct_saveimg
+model_type: ESRGANModel
+scale: 2
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+#  test_1: # the 1st test dataset
+#    name: set5
+#    type: PairedImageDataset
+#    dataroot_gt: /home/zhiyi/data/Set5_512/hr
+#    dataroot_lq: /home/zhiyi/data/Set5_512/x2
+#    io_backend:
+#      type: disk
+#
+#  test_2: # the 2nd test dataset
+#    name: set14
+#    type: PairedImageDataset
+#    dataroot_gt: /home/zhiyi/data/Set14/GTmod12
+#    dataroot_lq: /home/zhiyi/data/Set14/LRbicx2
+#    io_backend:
+#      type: disk
+
+  test_3:
+    name: belly
+    type: PairedImageDataset
+    dataroot_gt: /home/zhiyi/data/medical/belly/hr_valid
+    dataroot_lq: /home/zhiyi/data/medical/belly/x2_valid
+    io_backend:
+      type: disk
+
+#  test_4:
+#    name: lung
+#    type: PairedImageDataset
+#    dataroot_gt: /home/zhiyi/data/medical/lung/hr_valid
+#    dataroot_lq: /home/zhiyi/data/medical/lung/x2_valid
+#    io_backend:
+#      type: disk
+
+# network structures
+network_g:
+  type: RRDBNet
+  num_in_ch: 3
+  num_out_ch: 3
+  scale: 2
+  num_feat: 64
+  num_block: 23
+  num_grow_ch: 32
+
+# path
+path:
+  pretrain_network_g: /home/zhiyi/pycharm-tmp/basicsr/experiments/train_esrgan_belly_x2/models/net_g_25000.pth
+  strict_load_g: true
+
+# validation settings
+val:
+  save_img: true
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 2
+      test_y_channel: true
+    ssim:
+      type: calculate_ssim
+      crop_border: 2
+      test_y_channel: true

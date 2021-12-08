@@ -1,0 +1,91 @@
+name: hanswinir_BIX3_test
+suffix: ~  # add suffix to saved images
+model_type: SRModel
+scale: 3
+crop_border: ~  # crop border when evaluation. If None, crop the scale pixels
+cpu: False
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+seed: 1
+
+datasets:
+  test_1:
+    name: Set5
+    type: PairedImageDataset
+    dataroot_gt: /home/zhiyi/data/Set5_504/GTmod12
+    dataroot_lq: /home/zhiyi/data/Set5_504/LRbicx3
+    filename_tmpl: '{}x3'
+    io_backend:
+      type: disk
+
+  test_2:
+    name: Set14
+    type: PairedImageDataset
+    dataroot_gt: /home/zhiyi/data/Set14/GTmod12
+    dataroot_lq: /home/zhiyi/data/Set14/LRbicx3
+    filename_tmpl: '{}x2'
+    io_backend:
+      type: disk
+
+  test_3:  # the 1st test dataset
+    name: B100
+    type: PairedImageDataset
+    dataroot_gt: ~/data/B100/hr
+    dataroot_lq: ~/data/B100/x3
+    # filename_tmpl: '{}x2'
+    io_backend:
+      type: disk
+
+  test_4:  # the 2nd test dataset
+    name: Urban100
+    type: PairedImageDataset
+    dataroot_gt: ~/data/urban100/hr
+    dataroot_lq: ~/data/urban100/x3
+    # filename_tmpl: '{}x2'
+    io_backend:
+      type: disk
+
+  test_5:
+    name: Manga109
+    type: PairedImageDataset
+    dataroot_gt: ~/data/manga109/hr
+    dataroot_lq: ~/data/manga109/x3
+    # filename_tmpl: '{}x2'
+    io_backend:
+      type: disk
+
+# network structures
+network_g:
+  type: HAN_SwinIR
+  upscale: 3
+  in_chans: 3
+  img_size: 48
+  window_size: 8
+  img_range: 1.
+  depths: [6, 6, 6, 6, 6, 6]
+  embed_dim: 180
+  num_heads: [6, 6, 6, 6, 6, 6]
+  mlp_ratio: 2
+  upsampler: 'pixelshuffle'
+  resi_connection: '1conv'
+save_img: false
+
+# path
+path:
+  pretrain_network_g: ~/pycharm-tmp/basicsr/experiments/train_HANSwinIR_x3/models/net_g_125000.pth
+  strict_load_g: true
+  param_key_g: params
+
+# validation settings
+val:
+  save_img: false
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 3
+      test_y_channel: true
+    ssim:
+      type: calculate_ssim
+      crop_border: 3
+      test_y_channel: true
