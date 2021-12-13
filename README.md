@@ -8,4 +8,5 @@ python basicsr/train.py --opt options/train/GSTSR/train_GSTSR_x{your_factor}.yml
 ```angular2html
 python basicsr/test.py --opt options/test/GSTSR/test_GSTSR_x{your_factor}.yml
 ```
-预训练模型及结果见[百度网盘]()
+预训练模型及结果见[百度网盘：7y1q](https://pan.baidu.com/s/1o4397TclOAFnxg34WSacWQ)
+
